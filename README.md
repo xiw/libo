@@ -7,9 +7,15 @@ overflow detection.  For example, you can simply use
 	if (overflow_mul(&c, a, b))
 		printf("overflow!\n");
 
-to compute a * b and detect if any multiplication overflow happens.
-The runtime overhead is minimal, for example, only one more `jno`
-instruction on x86.
+to compute `a * b` and detect if any multiplication overflow happens.
+The runtime overhead is minimal.  Below is the implementation of
+`overflow_mul(int *, int, int)` on x86, with only one extra `seto`
+instruction.
+
+	imull	%edx, %esi
+	movl	%esi, (%rdi)
+	seto	%al
+	ret
 
 Instead of implementing these functions in assembly language for
 each architecture, libo is generated automatically via Clang/LLVM.
@@ -25,7 +31,7 @@ Usage
 	bool overflow_div(type *, type, type);
 
 libo performs signed (or unsigned) overflow checking if `type` is
-signed (or unsigned); `type` is inferred from the first (result)
+signed (or unsigned).  Note that `type` is inferred from the first
 parameter.
 
 See `smul.c` for an example.
