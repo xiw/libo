@@ -2,7 +2,6 @@
 #define OVERFLOW_H
 
 #include <stdbool.h>
-#include <stdint.h>
 #include <limits.h>
 
 #ifndef __has_builtin
@@ -95,11 +94,11 @@
 	static inline bool overflow_##op(ty *r, ty a, ty b) {		\
 		return overflow_##op##_##suffix(r, a, b);		\
 	}
-#else
+#else	/* __cplusplus */
 #define OVERFLOW_FUNC(op, suffix, ty) \
 	bool overflow_##op##_##suffix(ty *, ty, ty);
-#endif
-#endif
+#endif	/* __cplusplus */
+#endif	/* OVERFLOW_FUNC */
 
 #define OVERFLOW_FUNCS(op) 				\
 	OVERFLOW_FUNC(op, c, signed char)		\
@@ -119,4 +118,4 @@ OVERFLOW_FUNCS(sub)
 
 OVERFLOW_FUNCS(mul)
 
-#endif
+#endif	/* OVERFLOW_H */

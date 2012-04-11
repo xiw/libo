@@ -1,5 +1,5 @@
 #include <assert.h>
-#include <stdbool.h>
+#include <inttypes.h>
 #include "overflow.h"
 
 bool otest(const char *fmt, intmax_t a, intmax_t b)
