@@ -28,6 +28,8 @@ libo performs signed (or unsigned) overflow checking if `type` is
 signed (or unsigned); `type` is inferred from the first (result)
 parameter.
 
+See `smul.c` for an example.
+
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include "overflow.h"
@@ -44,48 +46,39 @@ parameter.
 			printf("%d\n", c);
 	}	
 
-In this example, `overflow_mul()` checks for signed multiplication
-overflow.  Compared to ad hoc overflow checks, which are in fact
-very difficult to implement correctly in C/C++, libo API is much
-easier to read.
+Here `overflow_mul()` checks for signed multiplication overflow
+since `c` is signed.
 
-Assume Linux/x86_64.
-
-	$ gcc -o smul smul.c lib/x86_64-linux-libo.s
-	$ ./smul 123 456
-	123 * 456 = 56088
-	$ ./smul 123 45600000
-	123 * 45600000 = overflow!
+Compared to ad hoc overflow checks, which are in fact very difficult
+to implement correctly in C/C++, libo API is much easier to read.
 
 
 Linking
 -------
 
-When using Clang with overflow builtins, there is no need to link
-`ARCH-OS-libo.s`.
+Make sure you have built `libo.a`, by typing `make` in libo directory.
+Currently libo supports x86_64 for Linux and Darwin by default.
 
-Otherwise, grab an appropriate `ARCH-OS-libo.s` in `lib` and link
-it to your project.  Currently we have x86_64 for Linux and Darwin
-by default.
+Then build `smul` as follows.
 
-If you need support for another target platform, invoke Clang with
-the corresponding triple.  See examples in `GNUmakefile`.  Note
-that you may need [compiler_rt](http://compiler-rt.llvm.org/) for
-32-bit platforms.
-
-You can also create `libo.a` for future use.
-
-	$ gcc -c -o libo.o lib/x86_64-linux-libo.s
-	$ ar cru libo.a libo.o
-	$ ranlib libo.a
 	$ gcc -o smul smul.c libo.a
+	$ ./smul 123 456
+	123 * 456 = 56088
+	$ ./smul 123 45600000
+	123 * 45600000 = overflow!
+
+When using Clang with overflow builtins, there is even no need to
+link `libo.a`.
+
 
 Internals
 ---------
 
-To generate `ARCH-OS-libo.s`, get a copy of Clang with overflow
-builtins.
+If you need support for another target platform, invoke Clang with
+the target triple to generate the corresponding `ARCH-OS-libo.s`.
+See x86_64 examples in `GNUmakefile`.  You need a copy of Clang
+with overflow builtins.
 
 	https://github.com/xiw/clang/tree/builtin-overflow
 
-Then type `make` in libo directory.
+Sometimes you may need to link [compiler_rt](http://compiler-rt.llvm.org/).
