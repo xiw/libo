@@ -1,0 +1,6 @@
+More architectures
+- powerpc/arm test needed
+- clang generates call to __muloti4 on i386; link libcompiler_rt?
+
+Any chance to inline function calls?
+- generate inline assembly?
