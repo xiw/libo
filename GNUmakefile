@@ -20,7 +20,7 @@ libo.a: lib/$(ARCH)-$(OS)-libo.s
 otest.o: otest.c
 	gcc -g -O3 -o $@ -c $<
 
-test: gtest.cpp otest.o lib/$(ARCH)-$(OS)-libo.s
+test: gtest.cpp otest.o libo.a
 	g++ -g -O3 -o $@ $^ -lgtest_main -lgtest -lpthread
 
 check: test
